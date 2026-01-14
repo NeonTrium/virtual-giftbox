@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Giftwrap |  Tools - NeonTrium</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="giftbox.png">
+    <link rel="apple-touch-icon" href="giftbox.png">
+    <link rel="canonical" href="https://neontrium.github.io/virtual-giftwrap/">
+</head>
+<body data-theme="light">
+    <header>
+        <div class="header-content">
+            <div class="branding">
+                <h1>Virtual Giftwrap</h1>
+                <p class="tagline">Turn long-distance feelings into a gift you can give. Virtually.</p>
+            </div>
+            <div class="header-controls">
+                <a href="https://neontrium.github.io" class="brand-icon" aria-label="Home">
+                    <img src="https://lh3.googleusercontent.com/pw/AP1GczPVqvbcIB6u0cVvc3ObBAoXpkpWEJf0dut2Xh6enT8p8MoeeiA9DI6UIPkzxfUc4cFdzqCJ76YcPXWX3BlMK3B1y2fUR1g9urnU75uHXghmNwFWX5uTZihXJ0LSscKvIajtUMGhcMkDIgx3N7jjT3MY=w1393-h784-s-no-gm?authuser=1" alt="">
+                </a>
+                <a href="https://ko-fi.com/neontrium" target="_blank" class="kofi-link" aria-label="Support on Ko-fi">☕</a>
+                <button id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">◐</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="generator-layout">
+        <aside class="inputs-panel">
+            <section class="input-group">
+                <h2>Preset</h2>
+                <div class="preset-grid">
+                    <button class="preset-btn active" data-preset="birthday">Birthday</button>
+                    <button class="preset-btn" data-preset="anniversary">Anniversary</button>
+                    <button class="preset-btn" data-preset="love">Love Letter</button>
+                    <button class="preset-btn" data-preset="sorry">Sorry</button>
+                    <button class="preset-btn" data-preset="festive">Festive</button>
+                    <button class="preset-btn" data-preset="none">No Occasion</button>
+                </div>
+            </section>
+
+            <section class="input-group">
+                <h2>Recipients</h2>
+                <input type="text" id="recipientName" placeholder="To (optional)" maxlength="50">
+                <input type="text" id="gifterName" placeholder="From (optional)" maxlength="50">
+                <div class="date-picker" id="datePicker">
+                    <div class="date-display" id="dateDisplay">mm/dd/yyyy</div>
+                    <div class="date-dropdown" id="dateDropdown"></div>
+                </div>
+            </section>
+
+            <section class="input-group">
+                <h2>Snowglobe Image <span class="required">*</span></h2>
+                <div class="upload-zone" id="imageUpload">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <p>Drop image or click</p>
+                    <span class="hint">Square format, min 512×512</span>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" hidden>
+                <canvas id="imageCropper" style="display:none;">
+                </canvas>
+            </section>
+
+            <section class="input-group">
+                <h2>Letter <span class="required">*</span></h2>
+                <textarea id="letterText" placeholder="Write your message..." rows="8" maxlength="2000"></textarea>
+                <span class="char-count">0 / 2000</span>
+            </section>
+
+            <details class="input-group">
+                <summary>Customize further</summary>
+                <div class="advanced-controls">
+                    <label>
+                        Particle Type
+                    </label>
+                    <select id="particleType">
+                        <option value="snow">Snow</option>
+                        <option value="glitter">Glitter</option>
+                        <option value="hearts">Hearts</option>
+                        <option value="confetti">Confetti</option>
+                    </select>
+                    
+                    <label>
+                        Particle Density
+                        <input type="range" id="particleDensity" min="20" max="100" value="50">
+                    </label>
+                    <label>
+                        Particle Speed
+                        <input type="range" id="particleSpeed" min="1" max="10" value="5">
+                    </label>
+                    <label>
+                        Glass Tint
+                    </label>
+                    <input type="color" id="glassTint" value="#ffffff">
+                    
+                    <label>
+                        Custom Font (Google Fonts name)
+                        <input type="text" id="customFont" placeholder="e.g., Playfair Display">
+                    </label>
+                    <label>
+                        Audio (optional)
+                        <input type="file" id="audioInput" accept="audio/*">
+                    </label>
+                </div>
+            </details>
+
+            <button id="generateBtn" class="primary-btn">Generate Keepsake</button>
+        </aside>
+
+        <div class="preview-panel">
+            <div class="preview-sticky">
+                <div class="preview-header">
+                    <h3>Preview</h3>
+                    <button id="previewExpand" aria-label="Expand preview">⛶</button>
+                </div>
+                <div id="previewContainer" class="preview-container">
+                    <div class="preview-placeholder">
+                        <p>Your keepsake will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button id="mobilePreviewBtn" class="mobile-preview-btn">Preview</button>
+
+    <div id="previewModal" class="modal">
+        <button class="modal-close" aria-label="Close">&times;</button>
+        <div class="modal-content"></div>
+    </div>
+
+    <div id="cropModal" class="modal" aria-hidden="true">
+        <div class="modal-inner">
+            <button id="cropClose" class="modal-close" aria-label="Close">×</button>
+            <h3>Adjust Your Image</h3>
+            <div id="cropStage">
+            <div class="crop-canvas-wrap">
+                <canvas id="cropCanvas"></canvas>
+                <div id="cropFrame" class="crop-frame" aria-hidden="true"></div>
+            </div>
+            </div>
+            <div class="crop-controls">
+            <input type="range" id="cropZoom" min="100" max="300" value="100" />
+            <button id="cropConfirm" class="primary-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
